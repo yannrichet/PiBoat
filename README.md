@@ -7,7 +7,6 @@ Replace a standard remote control for RC Boat by:
   * Raspberry Pi web server, controlling onboard GPIO/Servo/Motor & Camera
   * onboard video streaming is accessible for anybody connected to open PiBoat wifi
 
-![](_README/main.jpg)
 
 This guide was written for beginers (in Raspberry, GPIO, Servo, ...), with sometimes detailed instructions.
 Expect about $50 cost and ~10 hours to install & configure it.
@@ -28,9 +27,9 @@ Expect about $50 cost and ~10 hours to install & configure it.
 
 
 2. Install Raspberry basic software
-  The basic OS is just a raspbian-lite. So just follow standard Raspbian instructions here: 
-  https://www.raspberrypi.org/documentation/installation/installing-images/README.md
-  using Raspbian-Lite image (https://downloads.raspberrypi.org/raspbian_lite_latest) and Etcher tool (https://etcher.io/).
+
+    The basic OS is just a raspbian-lite. So just follow standard Raspbian instructions here: https://www.raspberrypi.org/documentation/installation/installing-images/README.md
+    using Raspbian-Lite image (https://downloads.raspberrypi.org/raspbian_lite_latest) and Etcher tool (https://etcher.io/).
 
     In the end, you should have a functionnal SD-card with Raspbian-Lite installed on it.
 
@@ -56,6 +55,7 @@ iface wlan0 inet dhcp
 wpa-ssid "myssid"
 wpa-psk "mypsk"
 ```
+
         6. check wifi access: `sudo service networking restart` and get the wifi IP: `ifconfig wlan0`  (usually 192.168.1.xxx)
     
         Now we will reboot to control the raspberry only with command line through SSH (you can use PuTTY client from your Windows computer): `sudo halt`, wait shutdown and then unplug HDMI, USB keyboard, micro-USB power supply. Then replug micro-USB power supply and camera only.
@@ -128,7 +128,7 @@ I choose to plug pins 22 and 27 from Pi Zero, and to power the Pi Zero from the 
 
 ![](_README/Raspberry-Pi-Model-Zero-Mini-PC.jpg)
 
-So, I had to add another small UBEC to power Pi Zero, because my ESC secondary output was 6V...
+So, I had to add another small UBEC to power Pi Zero (see blue light), because my ESC secondary output was 6V...
 
 Whole result:
 
@@ -161,3 +161,4 @@ Before powering the ESC, I __strongly__ suggest that you check all the cables th
   * Control it using left/right/top/bottom buttons and see onboard view in real-time (expect less than .5 seconds delay)
 
 
+![Analytics](https://ga-beacon.appspot.com/UA-109580-20/piboat)
