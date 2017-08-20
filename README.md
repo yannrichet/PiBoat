@@ -55,8 +55,7 @@ iface wlan0 inet dhcp
 wpa-ssid "myssid"
 wpa-psk "mypsk"
 ```
-
-        6. check wifi access: `sudo service networking restart` and get the wifi IP: `ifconfig wlan0`  (usually 192.168.1.xxx)
+        6. check wifi access: `sudo service networking restart` and get the wifi IP: `ifconfig wlan0` (usually 192.168.1.xxx)
     
         Now we will reboot to control the raspberry only with command line through SSH (you can use PuTTY client from your Windows computer): `sudo halt`, wait shutdown and then unplug HDMI, USB keyboard, micro-USB power supply. Then replug micro-USB power supply and camera only.
     3. Install & configure web server
