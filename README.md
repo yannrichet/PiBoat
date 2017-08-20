@@ -79,41 +79,41 @@ Expect about $50 cost and ~10 hours to install & configure it.
              (*) if using RealTek chip for your antenna, you will have problems with default hostap. Some turn-around is here: https://github.com/lostincynicism/hostapd-rtl8188 
              * configure network: `sudo vi /etc/network/interfaces`
              ```
-        ...
-        auto wlan1
-        allow-hotplug wlan1
-        iface wlan1 inet static
-            address 192.168.2.1
-            netmask 255.255.255.0
-            network 192.168.2.0
-            broadcast 192.168.2.255
-            hostapd /etc/hostapd/hostapd.conf
-            wireless-power off
-            ```
-            * configure access point: `sudo vi /etc/hostapd/hostapd.conf`
-            ```
-            interface=wlan1
-            ssid=PiBoat
-            channel=1
-            macaddr_acl=0
-            auth_algs=1
-            ignore_broadcast_ssid=0
-            driver=rtl871xdrv # TO BE CHANGED IF NEEDED
-            ieee80211n=1
-            hw_mode=g
-            device_name=RTL8192CU
-            manufacturer=Realtek
-            ```
-            * configure dns/dhcp: `sudo vi /etc/dnsmasq.conf`
-            ```
-            interface=wlan1
-            listen-address=192.168.2.1
-            bind-interfaces
-            server=192.168.2.1
-            domain-needed
-            bogus-priv
-            dhcp-range=192.168.2.10,192.168.2.20,12h 
-            ```
+             ...
+             auto wlan1
+             allow-hotplug wlan1
+             iface wlan1 inet static
+             address 192.168.2.1
+             netmask 255.255.255.0
+             network 192.168.2.0
+             broadcast 192.168.2.255
+             hostapd /etc/hostapd/hostapd.conf
+             wireless-power off
+             ```
+             * configure access point: `sudo vi /etc/hostapd/hostapd.conf`
+             ```
+             interface=wlan1
+             ssid=PiBoat
+             channel=1
+             macaddr_acl=0
+             auth_algs=1
+             ignore_broadcast_ssid=0
+             driver=rtl871xdrv # TO BE CHANGED IF NEEDED
+             ieee80211n=1
+             hw_mode=g
+             device_name=RTL8192CU
+             manufacturer=Realtek
+             ```
+             * configure dns/dhcp: `sudo vi /etc/dnsmasq.conf`
+             ```
+             interface=wlan1
+             listen-address=192.168.2.1
+             bind-interfaces
+             server=192.168.2.1
+             domain-needed
+             bogus-priv
+             dhcp-range=192.168.2.10,192.168.2.20,12h 
+             ```
 
       Now you can stop your Pi Zero for next hardware step: soldering of servo & motor control...
 
@@ -125,28 +125,28 @@ This is the hard part.
 
 I choose to plug pins 22 and 27 from Pi Zero, and to power the Pi Zero from the output of the boat ESC (2 pins +5V and groun pin on row 2):
 
-<img src="_README/Raspberry-Pi-Model-Zero-Mini-PC.jpg" width="200">
+<img src="_README/Raspberry-Pi-Model-Zero-Mini-PC.jpg" width="600">
 
 So, I had to add another small UBEC to power Pi Zero (see blue light), because my ESC secondary output was 6V...
 
 Whole result:
 
 <table><tr><td>
-<img src="_README/whole.jpg" width="200">
+<img src="_README/whole.jpg" width="400">
 </td><td>
-<img src="_README/whole_rev.jpg" width="200">
+<img src="_README/whole_rev.jpg" width="400">
 </td></tr></table>
 
 In action:
 
-<img src="_README/demo.gif" width="200">
+<img src="_README/demo.gif" width="400">
 
 Details of the Pi Zero pins:
 
 <table><tr><td>
-<img src="_README/pi_rev.jpg" width="200">
+<img src="_README/pi_rev.jpg" width="400">
 </td><td>
-<img src="_README/pins.jpg" width="200">
+<img src="_README/pins.jpg" width="400">
 </td></tr></table>
 
 
