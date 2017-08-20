@@ -47,16 +47,16 @@ Expect about $50 cost and ~10 hours to install & configure it.
         3. [change locale] using `raspi-config` menu
         4. add SSH server at startup: `sudo systemctl enable ssh`
         5. setup wifi to connect on your home network, for instance fill with your wifi network PSK: `sudo vi /etc/network/interfaces`
-```
-...
-auto wlan0
-allow-hotplug wlan0
-iface wlan0 inet dhcp
-wpa-ssid "myssid"
-wpa-psk "mypsk"
-```
+        ```
+        ...
+        auto wlan0
+        allow-hotplug wlan0
+        iface wlan0 inet dhcp
+        wpa-ssid "myssid"
+        wpa-psk "mypsk"
+        ```
         6. check wifi access: `sudo service networking restart` and get the wifi IP: `ifconfig wlan0` (usually 192.168.1.xxx)
-    
+        
         Now we will reboot to control the raspberry only with command line through SSH (you can use PuTTY client from your Windows computer): `sudo halt`, wait shutdown and then unplug HDMI, USB keyboard, micro-USB power supply. Then replug micro-USB power supply and camera only.
     3. Install & configure web server
         1. login through SSH to your Pi Zero using PuTTY or any SSH client: `ssh pi@192.168.1.xxx`
@@ -76,44 +76,44 @@ wpa-psk "mypsk"
         1. identify your wifi antenna: `lsusb`
         2. install Access Point softwares: `sudo apt-get install hostapd dnsmasq` and then
         
-            (*) if using RealTek chip for your antenna, you will have problems with default hostap. Some turn-around is here: https://github.com/lostincynicism/hostapd-rtl8188 
-            * configure network: `sudo vi /etc/network/interfaces`
-```
-...
-auto wlan1
-allow-hotplug wlan1
-iface wlan1 inet static
-    address 192.168.2.1
-    netmask 255.255.255.0
-    network 192.168.2.0
-    broadcast 192.168.2.255
-    hostapd /etc/hostapd/hostapd.conf
-    wireless-power off
-```
+             (*) if using RealTek chip for your antenna, you will have problems with default hostap. Some turn-around is here: https://github.com/lostincynicism/hostapd-rtl8188 
+             * configure network: `sudo vi /etc/network/interfaces`
+             ```
+        ...
+        auto wlan1
+        allow-hotplug wlan1
+        iface wlan1 inet static
+            address 192.168.2.1
+            netmask 255.255.255.0
+            network 192.168.2.0
+            broadcast 192.168.2.255
+            hostapd /etc/hostapd/hostapd.conf
+            wireless-power off
+            ```
             * configure access point: `sudo vi /etc/hostapd/hostapd.conf`
-```
-interface=wlan1
-ssid=PiBoat
-channel=1
-macaddr_acl=0
-auth_algs=1
-ignore_broadcast_ssid=0
-driver=rtl871xdrv # TO BE CHANGED IF NEEDED
-ieee80211n=1
-hw_mode=g
-device_name=RTL8192CU
-manufacturer=Realtek
-```
+            ```
+            interface=wlan1
+            ssid=PiBoat
+            channel=1
+            macaddr_acl=0
+            auth_algs=1
+            ignore_broadcast_ssid=0
+            driver=rtl871xdrv # TO BE CHANGED IF NEEDED
+            ieee80211n=1
+            hw_mode=g
+            device_name=RTL8192CU
+            manufacturer=Realtek
+            ```
             * configure dns/dhcp: `sudo vi /etc/dnsmasq.conf`
-```
-interface=wlan1
-listen-address=192.168.2.1
-bind-interfaces
-server=192.168.2.1
-domain-needed
-bogus-priv
-dhcp-range=192.168.2.10,192.168.2.20,12h 
-```
+            ```
+            interface=wlan1
+            listen-address=192.168.2.1
+            bind-interfaces
+            server=192.168.2.1
+            domain-needed
+            bogus-priv
+            dhcp-range=192.168.2.10,192.168.2.20,12h 
+            ```
 
       Now you can stop your Pi Zero for next hardware step: soldering of servo & motor control...
 
@@ -125,21 +125,29 @@ This is the hard part.
 
 I choose to plug pins 22 and 27 from Pi Zero, and to power the Pi Zero from the output of the boat ESC (2 pins +5V and groun pin on row 2):
 
-![](_README/Raspberry-Pi-Model-Zero-Mini-PC.jpg)
+<img src="_README/Raspberry-Pi-Model-Zero-Mini-PC.jpg" width="200">
 
 So, I had to add another small UBEC to power Pi Zero (see blue light), because my ESC secondary output was 6V...
 
 Whole result:
 
-![](_README/whole.jpg) | ![](_README/whole_rev.jpg)
+<table><tr><td>
+<img src="_README/whole.jpg" width="200">
+</td><td>
+<img src="_README/whole_rev.jpg" width="200">
+</td></tr></table>
 
 In action:
 
-![](_README/demo.gif)
+<img src="_README/demo.gif" width="200">
 
 Details of the Pi Zero pins:
 
-![](_README/pi_rev.jpg) | ![](_README/pins.jpg)
+<table><tr><td>
+<img src="_README/pi_rev.jpg" width="200">
+</td><td>
+<img src="_README/pins.jpg" width="200">
+</td></tr></table>
 
 
 Before powering the ESC, I __strongly__ suggest that you check all the cables that connect every part. If you make some mistake (like I did :), you will burn your Pi Zero or servo.
