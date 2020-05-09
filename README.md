@@ -1,4 +1,4 @@
-# TD;LR
+# TL;DR
 
 Replace a standard remote control for RC Boat by:
 
