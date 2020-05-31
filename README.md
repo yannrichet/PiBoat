@@ -2,14 +2,35 @@
 
 Replace a standard remote control for RC Boat by:
 
-  * webpage with RC controls (forward, bacward, left, right) and video streaming 
-  * accessible through a dedicated Wifi hotspot (access on phone/tablet/PC)
+  * dedicated Wifi hotspot (access via phone/tablet/PC)
+  * control through webpage with:
+    * RC controls buttons (forward, bacward, left, right)
+    * Gamepad websocket RC controls (for faster reaction)
+    * onboard video streaming 
+ 
+Based on:
+
   * Raspberry Pi web server, controlling onboard GPIO/Servo/Motor & Camera
   * onboard video streaming is accessible for anybody connected to open PiBoat wifi
+  * NodeJS (0.12) with pi-blaster and websocket modules
 
 
 This guide was written for beginers (in Raspberry, GPIO, Servo, ...), with sometimes detailed instructions.
 Expect about $50 cost and ~10 hours to install & configure it.
+
+
+# Result expected
+
+
+<table><tr><td>
+<img src="_README/IMG_20200531_184143.resized.jpg" width="400">
+</td><td>
+<img src="_README/IMG_20200531_184348.resized.jpg" width="400">
+</td></tr></table>
+
+
+<img src="_README/VID_20200531_184617.gif" width="400">
+
 
 
 # Onboard Raspberry Pi
@@ -129,7 +150,7 @@ I choose to plug pins 22 and 27 from Pi Zero, and to power the Pi Zero from the 
 
 So, I had to add another small UBEC to power Pi Zero (see blue light), because my ESC secondary output was 6V...
 
-Whole result:
+Result:
 
 <table><tr><td>
 <img src="_README/whole.jpg" width="400">
