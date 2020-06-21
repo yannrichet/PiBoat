@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>PiBoat</title>
+
+    <meta name="author" content="richet">
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!--link href="css/style.css" rel="stylesheet"-->
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <script src="js/jquery.min.js" type="text/javascript"></script>
+    <script src="js/bootstrap.min.js" type="text/javascript"></script>
+  
+    <!--script src="node_modules/ws/index.js" type="text/javascript"></script-->
+
+  </head>
+  <body>
+
+<h1>View</h1>
+
+
+
+    <div class="container-fluid">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="media well">
+
+						 <!--div class="jsmpeg" data-url="video.ts"></div-->
+						 <center><img id='view' src="http://localhost:8080/stream/video.mjpeg" alt="View" width="100%"></img></center>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-4">
+				</div>
+				<div class="col-xs-4">
+					<div class="row">
+						<div class="col-xs-12">
+							<center> 
+							<button name="forward" id="forward" class="btn btn-default" href="" aria-label="Forward">
+                              <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                            </button>
+                            <script>
+                                $('#forward').click(function(e) {
+    e.preventDefault();
+                                    $.post('/forward')
+                                });
+                            </script>
+							</center>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-4">
+				</div>
+			</div>
+			<br/>
+			<div class="row">
+				<div class="col-xs-4">
+					<div class="row">
+						<div class="col-xs-12">
+							<center>
+							<button name="left" id="left" class="btn btn-default" href="" aria-label="Left">
+                              <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                            </button>
+							<script>
+                                $('#left').click(function(e) {
+    e.preventDefault();
+                                    $.post('/left')
+                                });
+                            </script>
+                            </center>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-4">
+					<div class="row">
+						<div class="col-xs-12">
+							<center> 
+							<button name="stop" id="stop" class="btn btn-default" href="" aria-label="Stop">
+                              <i class="fa fa-stop" aria-hidden="true"></i>
+                            </button>
+							<script>
+                                $('#stop').click(function(e) {
+    e.preventDefault();
+                                    $.post('/stop')
+                                });
+                            </script>
+                            </center>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-4">
+					<div class="row">
+						<div class="col-xs-12">
+							<center> 
+							<button name="right" id="right" class="btn btn-default" href="" aria-label="Right">
+                              <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                            </button>
+							<script>
+                                $('#right').click(function(e) {
+    e.preventDefault();
+                                    $.post('/right')
+                                });
+                            </script>
+                            </center>
+						</div>
+					</div>
+				</div>
+			</div>
+			<br/>
+			<div class="row">
+				<div class="col-xs-4">
+				</div>
+				<div class="col-xs-4">
+					<div class="row">
+						<div class="col-xs-12">
+							<center> 
+							<button  name="backward" id="backward" class="btn btn-default" href="" aria-label="Backward">
+                              <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                            </button>
+							<script>
+                                $('#backward').click(function(e) {
+    e.preventDefault();
+                                    $.post('/backward')
+                                });
+                            </script>
+                            </center>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-4">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script>    
+var ip = location.host;
+$("#view").attr("src", "http://"+ip+":8080/stream/video.mjpeg");
+console.log("ip: "+ip);
+</script>
+
+      <h1 id="start"></h1>
+      <script>
+          // Setup websocket to pass controller actions to server
+          //@ref: https://hackernoon.com/nodejs-web-socket-example-tutorial-send-message-connect-express-set-up-easy-step-30347a2c5535
+
+          var ws = new WebSocket('ws://'+location.host+':3000');
+          // event emmited when connected
+          ws.onopen = function () {
+              console.log('websocket is connected ...')
+              // sending a send event to websocket server
+              ws.send('connected')
+          }
+
+          // event emmited when receiving message 
+          ws.onmessage = function (ev) {
+              console.log(ev);
+          }
+
+
+      //@ref: https://developer.mozilla.org/fr/docs/Web/Guide/API/Gamepad
+      var haveEvents = 'GamepadEvent' in window;
+      var controllers = {};
+      var rAF = window.mozRequestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.requestAnimationFrame;
+
+      function connecthandler(e) {
+      			console.log("connecthandler "+e.gamepad)
+      ws.send("connecthandler "+e.gamepad)
+
+        addgamepad(e.gamepad);
+      }
+      function addgamepad(gamepad) {
+      
+      	console.log("addgamepad "+gamepad)
+      ws.send("addgamepad "+gamepad)
+
+        controllers[gamepad.index] = gamepad; 
+        var d = document.createElement("div");
+        d.setAttribute("id", "controller" + gamepad.index);
+        var t = document.createElement("h1");
+        t.appendChild(document.createTextNode("gamepad: " + gamepad.id));
+        d.appendChild(t);
+        var b = document.createElement("div");
+        b.className = "buttons";
+        for (var i=0; i<gamepad.buttons.length; i++) {
+          var e = document.createElement("span");
+          e.className = "button";
+          //e.id = "b" + i;
+          e.innerHTML = i;
+          b.appendChild(e);
+        }
+        d.appendChild(b);
+        var a = document.createElement("div");
+        a.className = "axes";
+        for (var i=0; i<gamepad.axes.length; i++) {
+          var e = document.createElement("progress");
+          e.className = "axis";
+          //e.id = "a" + i;
+          e.setAttribute("max", "2");
+          e.setAttribute("value", "1");
+          e.innerHTML = i;
+          a.appendChild(e);
+        }
+        d.appendChild(a);
+        document.getElementById("start").style.display = "none";
+        document.body.appendChild(d);
+        rAF(updateStatus);
+      }
+
+      function disconnecthandler(e) {
+      	console.log("disconnecthandler "+e.gamepad)
+      	ws.send("disconnecthandler "+e.gamepad)
+
+        removegamepad(e.gamepad);
+      }
+
+      function removegamepad(gamepad) {
+      	console.log("removegamepad "+gamepad)
+      	ws.send("removegamepad "+gamepad)
+
+        var d = document.getElementById("controller" + gamepad.index);
+        document.body.removeChild(d);
+        delete controllers[gamepad.index];
+      }
+
+      var speed  = 0;
+      var angle = 0; 
+      function updateStatus() {
+        if (!haveEvents) {
+          scangamepads();
+        }
+        for (j in controllers) {
+          var controller = controllers[j];
+          var d = document.getElementById("controller" + j);
+          var buttons = d.getElementsByClassName("button");
+          for (var i=0; i<controller.buttons.length; i++) {
+            var b = buttons[i];
+            var val = controller.buttons[i];
+            var pressed = val == 1.0;
+            if (typeof(val) == "object") {
+              pressed = val.pressed;
+              val = val.value;
+            }
+            var pct = Math.round(val * 100) + "%"
+            b.style.backgroundSize = pct + " " + pct;
+            if (pressed) {
+              b.className = "button pressed";
+            } else {
+              b.className = "button";
+            }
+          }
+
+          var axes = d.getElementsByClassName("axis");
+          for (var i=0; i<controller.axes.length; i++) {
+            var a = axes[i];
+            a.innerHTML = i + ": " + controller.axes[i].toFixed(4);
+            a.setAttribute("value", controller.axes[i] + 1);
+
+            if (i==0) {
+              if (angle != controller.axes[i]) {
+                angle = controller.axes[i];
+                console.log("angle: "+angle);
+                 ws.send("angle: "+angle);
+              }
+            }
+            if (i==1) { 
+              if (speed != controller.axes[i]) {
+                speed = controller.axes[i];
+                console.log("speed: "+speed);
+                ws.send("speed: "+speed);
+              }
+            }
+          }
+        }
+        rAF(updateStatus);
+      }
+
+      function scangamepads() {
+      		  			console.log("?");
+
+        var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
+        for (var i = 0; i < gamepads.length; i++) {
+          if (gamepads[i]) {
+            if (!(gamepads[i].index in controllers)) {
+              addgamepad(gamepads[i]);
+            } else {
+              controllers[gamepads[i].index] = gamepads[i];
+            }
+          }
+        }
+      }
+
+      window.addEventListener("gamepadconnected", connecthandler);
+      window.addEventListener("gamepaddisconnected", disconnecthandler);
+      if (!haveEvents) {
+        setInterval(scangamepads, 500);
+      }
+      </script>
+
+
+
+  </body>
+</html>
