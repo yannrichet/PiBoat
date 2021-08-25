@@ -170,8 +170,8 @@ console.log("ip: "+ip);
       //@ref: https://developer.mozilla.org/fr/docs/Web/Guide/API/Gamepad
       var haveEvents = 'GamepadEvent' in window;
       var controllers = {};
-      var rAF = window.mozRequestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
+      var rAF = //window.mozRequestAnimationFrame ||
+        //window.webkitRequestAnimationFrame ||
         window.requestAnimationFrame;
 
       function connecthandler(e) {
