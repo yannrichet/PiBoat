@@ -48,7 +48,7 @@
                             </button>
                             <script>
                                 $('#forward').click(function(e) {
-    e.preventDefault();
+                                    e.preventDefault();
                                     $.post('/forward')
                                 });
                             </script>
@@ -70,7 +70,7 @@
                             </button>
 							<script>
                                 $('#left').click(function(e) {
-    e.preventDefault();
+                                    e.preventDefault();
                                     $.post('/left')
                                 });
                             </script>
@@ -87,7 +87,7 @@
                             </button>
 							<script>
                                 $('#stop').click(function(e) {
-    e.preventDefault();
+                                    e.preventDefault();
                                     $.post('/stop')
                                 });
                             </script>
@@ -104,7 +104,7 @@
                             </button>
 							<script>
                                 $('#right').click(function(e) {
-    e.preventDefault();
+                                    e.preventDefault();
                                     $.post('/right')
                                 });
                             </script>
@@ -126,7 +126,7 @@
                             </button>
 							<script>
                                 $('#backward').click(function(e) {
-    e.preventDefault();
+                                    e.preventDefault();
                                     $.post('/backward')
                                 });
                             </script>
@@ -140,7 +140,6 @@
 		</div>
 	</div>
 </div>
-
 
 <script>    
 var ip = location.host;
@@ -167,148 +166,48 @@ console.log("ip: "+ip);
           }
 
 
-      //@ref: https://developer.mozilla.org/fr/docs/Web/Guide/API/Gamepad
-      var haveEvents = 'GamepadEvent' in window;
-      var controllers = {};
-      var rAF = //window.mozRequestAnimationFrame ||
-        //window.webkitRequestAnimationFrame ||
-        window.requestAnimationFrame;
+window.addEventListener('gamepadconnected', (event) => {
+  const update = () => {
+    const output = document.getElementById('axes');
+    output.innerHTML = ''; // clear the output
 
-      function connecthandler(e) {
-      			console.log("connecthandler "+e.gamepad)
-      ws.send("connecthandler "+e.gamepad)
+    for (const gamepad of navigator.getGamepads()) {
+      if (!gamepad) continue;
+      for (const [index, axis] of gamepad.axes.entries()) {
+        output.insertAdjacentHTML('beforeend',
+          `<label>${gamepad.index}, ${index}
+             <progress value=${axis * 0.5 + 0.5}></progress>
+           </label>`);
+           console.log("index: "+index);
+           console.log("gamepad.axes: "+gamepad.axes);
 
-        addgamepad(e.gamepad);
-      }
-      function addgamepad(gamepad) {
-      
-      	console.log("addgamepad "+gamepad)
-      ws.send("addgamepad "+gamepad)
-
-        controllers[gamepad.index] = gamepad; 
-        var d = document.createElement("div");
-        d.setAttribute("id", "controller" + gamepad.index);
-        var t = document.createElement("h1");
-        t.appendChild(document.createTextNode("gamepad: " + gamepad.id));
-        d.appendChild(t);
-        var b = document.createElement("div");
-        b.className = "buttons";
-        for (var i=0; i<gamepad.buttons.length; i++) {
-          var e = document.createElement("span");
-          e.className = "button";
-          //e.id = "b" + i;
-          e.innerHTML = i;
-          b.appendChild(e);
-        }
-        d.appendChild(b);
-        var a = document.createElement("div");
-        a.className = "axes";
-        for (var i=0; i<gamepad.axes.length; i++) {
-          var e = document.createElement("progress");
-          e.className = "axis";
-          //e.id = "a" + i;
-          e.setAttribute("max", "2");
-          e.setAttribute("value", "1");
-          e.innerHTML = i;
-          a.appendChild(e);
-        }
-        d.appendChild(a);
-        document.getElementById("start").style.display = "none";
-        document.body.appendChild(d);
-        rAF(updateStatus);
-      }
-
-      function disconnecthandler(e) {
-      	console.log("disconnecthandler "+e.gamepad)
-      	ws.send("disconnecthandler "+e.gamepad)
-
-        removegamepad(e.gamepad);
-      }
-
-      function removegamepad(gamepad) {
-      	console.log("removegamepad "+gamepad)
-      	ws.send("removegamepad "+gamepad)
-
-        var d = document.getElementById("controller" + gamepad.index);
-        document.body.removeChild(d);
-        delete controllers[gamepad.index];
-      }
-
-      var speed  = 0;
-      var angle = 0; 
-      function updateStatus() {
-        if (!haveEvents) {
-          scangamepads();
-        }
-        for (j in controllers) {
-          var controller = controllers[j];
-          var d = document.getElementById("controller" + j);
-          var buttons = d.getElementsByClassName("button");
-          for (var i=0; i<controller.buttons.length; i++) {
-            var b = buttons[i];
-            var val = controller.buttons[i];
-            var pressed = val == 1.0;
-            if (typeof(val) == "object") {
-              pressed = val.pressed;
-              val = val.value;
-            }
-            var pct = Math.round(val * 100) + "%"
-            b.style.backgroundSize = pct + " " + pct;
-            if (pressed) {
-              b.className = "button pressed";
-            } else {
-              b.className = "button";
-            }
-          }
-
-          var axes = d.getElementsByClassName("axis");
-          for (var i=0; i<controller.axes.length; i++) {
-            var a = axes[i];
-            a.innerHTML = i + ": " + controller.axes[i].toFixed(4);
-            a.setAttribute("value", controller.axes[i] + 1);
-
-            if (i==0) {
-              if (angle != controller.axes[i]) {
-                angle = controller.axes[i];
+           var i = index;
+           var speed  = 0;
+           var angle = 0; 
+           if (i==0) {
+              if (angle != gamepad.axes[i]) {
+                angle = gamepad.axes[i];
                 console.log("angle: "+angle);
                  ws.send("angle: "+angle);
               }
             }
             if (i==1) { 
-              if (speed != controller.axes[i]) {
-                speed = controller.axes[i];
+              if (speed != gamepad.axes[i]) {
+                speed = gamepad.axes[i];
                 console.log("speed: "+speed);
                 ws.send("speed: "+speed);
               }
             }
-          }
-        }
-        rAF(updateStatus);
       }
+    }
+    requestAnimationFrame(update);
+  };
+  update();
+});
 
-      function scangamepads() {
-      		  			console.log("?");
-
-        var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
-        for (var i = 0; i < gamepads.length; i++) {
-          if (gamepads[i]) {
-            if (!(gamepads[i].index in controllers)) {
-              addgamepad(gamepads[i]);
-            } else {
-              controllers[gamepads[i].index] = gamepads[i];
-            }
-          }
-        }
-      }
-
-      window.addEventListener("gamepadconnected", connecthandler);
-      window.addEventListener("gamepaddisconnected", disconnecthandler);
-      if (!haveEvents) {
-        setInterval(scangamepads, 500);
-      }
       </script>
 
-
+    <div id="axes" style="display: flex; flex-direction: column;"></div>
 
   </body>
 </html>
